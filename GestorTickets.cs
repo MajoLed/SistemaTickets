@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-
+using System.IO; // Para el guardado de archivos
+using System.Text.Json; //
 public class GestorTickets
 {
     private List<Ticket> tickets = new List<Ticket>();
@@ -14,6 +15,15 @@ public class GestorTickets
         "Presencial",
         "WhatsApp"
     };
+
+    private readonly string archivoTickets = "tickets.json";
+
+    //Constructor
+    public GestorTickets()
+    {
+        CargarTickets();
+
+    }
 
     // ------------ MÉTODOS --------------
 
@@ -32,6 +42,9 @@ public class GestorTickets
 
         tickets.Add(ticket);
         Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
+
+        //Se llama al método de Guardar tickets
+        GuardarTickets();
     }
 
     public void MostrarCanales()
@@ -42,7 +55,6 @@ public class GestorTickets
             Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
         }
     }
-
     public string ObtenerCanal(int indice)
     {
         if (indice >= 1 && indice <= canalesContacto.Count)
@@ -99,6 +111,8 @@ public class GestorTickets
         ticket.TecnicoAsignado = nombreTecnico;
         ticket.Estado = "EnProceso";
         Console.WriteLine($"\n✓ Ticket #{ticketId} asignado a {nombreTecnico}");
+
+        GuardarTickets();
     }
 
     // Cerrar un ticket
@@ -108,13 +122,15 @@ public class GestorTickets
 
         if (ticket == null)
         {
-            Console.WriteLine($"\n✗ No existe el ticket #{ticketId}");
+            Console.WriteLine($"\nNo existe el ticket #{ticketId}");
             return;
         }
 
         ticket.Estado = "Cerrado";
         ticket.FechaCierre = DateTime.Now;
         Console.WriteLine($"\n✓ Ticket #{ticketId} cerrado");
+
+        GuardarTickets();
     }
 
     // Método auxiliar para mostrar un ticket
@@ -131,4 +147,54 @@ public class GestorTickets
         if (ticket.FechaCierre != null)
             Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
     }
+
+
+    // ------------ MÉTODOS JSON --------------
+    private void CargarTickets()
+    {
+        try
+        {
+            if (File.Exists(archivoTickets))
+            {
+                string json = File.ReadAllText(archivoTickets);
+                tickets = JsonSerializer.Deserialize<List<Ticket>>(json) ?? new List<Ticket>();
+
+                // Actualizar el siguiente ID
+                if (tickets.Count > 0)
+                {
+                    siguienteId = tickets.Max(t => t.ID) + 1;
+                }
+
+                Console.WriteLine($"Se cargaron {tickets.Count} tickets desde el archivo.");
+            }
+            else
+            {
+                Console.WriteLine("No se encontró el archivo. Se creará uno nuevo.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar tickets: {ex.Message}");
+            tickets = new List<Ticket>();
+        }
+    }
+
+    private void GuardarTickets()
+    {
+        try
+        {
+            var opciones = new JsonSerializerOptions
+            {
+                WriteIndented = true 
+            };
+
+            string json = JsonSerializer.Serialize(tickets, opciones);
+            File.WriteAllText(archivoTickets, json);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al guardar el ticket: {ex.Message}");
+        }
+    }
+
 }
