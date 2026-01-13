@@ -49,16 +49,18 @@ public class GestorTickets
 
     public void MostrarCanales()
     {
-        Console.WriteLine("\nCanales de contacto:");
+        Console.WriteLine("\nSeleccione el canal de conectacto: ");
         for (int i = 0; i < canalesContacto.Count; i++)
         {
             Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
         }
+
     }
     public string ObtenerCanal(int indice)
     {
         if (indice >= 1 && indice <= canalesContacto.Count)
             return canalesContacto[indice - 1];
+
         return "Desconocido";
     }
 
@@ -158,8 +160,7 @@ public class GestorTickets
             {
                 string json = File.ReadAllText(archivoTickets);
                 tickets = JsonSerializer.Deserialize<List<Ticket>>(json) ?? new List<Ticket>();
-
-                // Actualizar el siguiente ID
+    
                 if (tickets.Count > 0)
                 {
                     siguienteId = tickets.Max(t => t.ID) + 1;

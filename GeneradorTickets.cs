@@ -16,5 +16,8 @@ public class Usuario
     public int ID { get; set; }
     public string NombreCliente { get; set; }
     public string Apellido { get; set; }
+    public string Empresa { get; set; }
+    public string SedeEmpresa { get; set; }
+
 
 }
