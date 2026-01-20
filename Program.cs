@@ -41,10 +41,10 @@ class ProgramTickets
                     CrearNuevoTicket();
                     break;
                 case "2":
-                    gestor.MostrarTodosLosTickets();
+                    MostrarTodosLosTickets();
                     break;
                 case "3":
-                    gestor.MostrarMisTickets(nombreTecnico);
+                    MostrarMisTickets(nombreTecnico);
                     break;
                 case "4":
                     AsignarTicket(gestor, nombreTecnico);
@@ -76,17 +76,16 @@ class ProgramTickets
         Ticket ticket = new Ticket();
 
         //asignar asunto
-        Console.WriteLine("Indique el Asunto: ");
+        Console.Write("Indique el Asunto: ");
         ticket.Asunto = Console.ReadLine();
         
         //asignar descripcion
-        Console.WriteLine("Indique la descripción: ");
+        Console.Write("Indique la descripción: ");
         ticket.Descripcion = Console.ReadLine();
 
         //mostrar canales
         ticket.CanalContacto = ValidarCanal(canalesContacto);
         
-
         Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
 
         gestor.CrearTicket(ticket);
@@ -104,6 +103,24 @@ class ProgramTickets
 
         if (ticket.FechaCierre != null)
             Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
+    }
+
+    public List<Ticket> MostrarTodosLosTickets() //retornar lista de tickets
+    {
+        if (tickets.Count == 0)
+        {
+            Console.WriteLine("\nNo hay tickets registrados.");
+        }
+
+        Console.WriteLine("\n=== TODOS LOS TICKETS ===");
+
+        foreach (var ticket in tickets)
+        {
+            MostrarTicket(ticket);
+        }
+
+        //Retornar lista de tickets
+        return tickets;
     }
 
     static void AsignarTicket(GestorTickets gestor, string nombreTecnico)

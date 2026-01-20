@@ -33,41 +33,17 @@ public class GestorTickets
         GuardarTickets();
     }
 
-    // Ver todos los tickets
-    public List<Ticket> MostrarTodosLosTickets() //retornar lista de tickets
-    {
-        if (tickets.Count == 0)
-        {
-            Console.WriteLine("\nNo hay tickets registrados.");
-        }
-
-        Console.WriteLine("\n=== TODOS LOS TICKETS ===");
-
-        foreach (var ticket in tickets)
-        {
-            MostrarTicket(ticket);
-        }
-
-        //Retornar lista de tickets
-        return tickets;
-    }
-
     // Ver tickets de un técnico específico
-    public void MostrarMisTickets(string nombreTecnico)
+    public List<Ticket> MostrarMisTickets(string nombreTecnico)
     {
         var misTickets = tickets.Where(t => t.TecnicoAsignado == nombreTecnico).ToList();
 
         if (misTickets.Count == 0)
         {
             Console.WriteLine($"\nNo tienes tickets asignados, {nombreTecnico}.");
-            return;
+            return misTickets;
         }
 
-        Console.WriteLine($"\n=== TICKETS DE {nombreTecnico} ===");
-        foreach (var ticket in misTickets)
-        {
-            MostrarTicket(ticket);
-        }
     }
 
 
@@ -108,19 +84,19 @@ public class GestorTickets
     }
 
     // Método auxiliar para mostrar un ticket
-    private void MostrarTicket(Ticket ticket)
-    {
-        Console.WriteLine($"\n--- Ticket #{ticket.ID} ---");
-        Console.WriteLine($"Cliente: {ticket.Asunto}");
-        Console.WriteLine($"Problema: {ticket.Descripcion}");
-        Console.WriteLine($"Canal: {ticket.CanalContacto}");
-        Console.WriteLine($"Estado: {ticket.Estado}");
-        Console.WriteLine($"Técnico: {ticket.TecnicoAsignado}");
-        Console.WriteLine($"Creado: {ticket.FechaCreacion:dd/MM/yyyy HH:mm}");
+    //private void mostrarticket(ticket ticket)
+    //{
+    //    console.writeline($"\n--- ticket #{ticket.id} ---");
+    //    console.writeline($"cliente: {ticket.asunto}");
+    //    console.writeline($"problema: {ticket.descripcion}");
+    //    console.writeline($"canal: {ticket.canalcontacto}");
+    //    console.writeline($"estado: {ticket.estado}");
+    //    console.writeline($"técnico: {ticket.tecnicoasignado}");
+    //    console.writeline($"creado: {ticket.fechacreacion:dd/mm/yyyy hh:mm}");
 
-        if (ticket.FechaCierre != null)
-            Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
-    }
+    //    if (ticket.fechacierre != null)
+    //        console.writeline($"cerrado: {ticket.fechacierre}");
+    //}
 
     // ------------ MÉTODOS JSON --------------
     private void CargarTickets()
