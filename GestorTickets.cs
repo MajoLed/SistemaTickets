@@ -70,6 +70,7 @@ public class GestorTickets
         }
     }
 
+
     // Asignar un ticket a un técnico
     public void AsignarTicket(int ticketId, string nombreTecnico)
     {
