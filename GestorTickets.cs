@@ -25,22 +25,20 @@ public class GestorTickets
         ticket.ID = siguienteId++;
         ticket.FechaCreacion = DateTime.Now;
         ticket.TecnicoAsignado = "Sin asignar";
+        ticket.Estado = "Abierto";
 
         tickets.Add(ticket);
-
-        Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
 
         //Se llama al método de Guardar tickets
         GuardarTickets();
     }
 
     // Ver todos los tickets
-    public void MostrarTodosLosTickets()
+    public List<Ticket> MostrarTodosLosTickets() //retornar lista de tickets
     {
         if (tickets.Count == 0)
         {
             Console.WriteLine("\nNo hay tickets registrados.");
-            return;
         }
 
         Console.WriteLine("\n=== TODOS LOS TICKETS ===");
@@ -49,6 +47,9 @@ public class GestorTickets
         {
             MostrarTicket(ticket);
         }
+
+        //Retornar lista de tickets
+        return tickets;
     }
 
     // Ver tickets de un técnico específico
@@ -81,7 +82,7 @@ public class GestorTickets
         }
 
         ticket.TecnicoAsignado = nombreTecnico;
-        ticket.Estado = "EnProceso";
+        ticket.Estado = "En Progreso";
         Console.WriteLine($"\n✓ Ticket #{ticketId} asignado a {nombreTecnico}");
 
         GuardarTickets();

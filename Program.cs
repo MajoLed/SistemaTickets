@@ -78,17 +78,20 @@ class Program
         Console.WriteLine("Indique el Asunto: ");
         ticket.Asunto = Console.ReadLine();
    
-
         Console.WriteLine("Indique la descripción: ");
         ticket.Descripcion = Console.ReadLine();
-        
+
+
+
+        Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
+
         gestor.CrearTicket(ticket);
 
     }
     private void MostrarTicket(Ticket ticket)
     {
         Console.WriteLine($"\n--- Ticket #{ticket.ID} ---");
-        Console.WriteLine($"Cliente: {ticket.Asunto}");
+        Console.WriteLine($"Asunto: {ticket.Asunto}");
         Console.WriteLine($"Problema: {ticket.Descripcion}");
         Console.WriteLine($"Canal: {ticket.CanalContacto}");
         Console.WriteLine($"Estado: {ticket.Estado}");
