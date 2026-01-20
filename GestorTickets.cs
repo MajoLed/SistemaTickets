@@ -121,7 +121,6 @@ public class GestorTickets
             Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
     }
 
-
     // ------------ MÉTODOS JSON --------------
     private void CargarTickets()
     {

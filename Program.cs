@@ -1,22 +1,22 @@
 ﻿using System;
+using System.Net.Sockets;
 
-class Program
+class ProgramTickets
 {
     static GestorTickets gestor = new GestorTickets();
-    static void Main(string[] args)
-    {
 
-        string nombreTecnico = "";
-
-        List<string> canalesContacto = new List<string> {
+    static private List<string> canalesContacto = new List<string> {
         "Correo",
         "Presencial",
         "WhatsApp",
         "Teams"
         };
+    static void Main(string[] args)
+    {
+        string nombreTecnico = "";
 
-    // Pedir nombre del técnico al inicio
-    Console.WriteLine("=== SISTEMA DE TICKETS ===");
+        // Pedir nombre del técnico al inicio
+        Console.WriteLine("=== SISTEMA DE TICKETS ===");
         Console.Write("Ingresa por favor el nombre del técnico: ");
         nombreTecnico = Console.ReadLine();
 
@@ -38,7 +38,7 @@ class Program
             switch (opcion)
             {
                 case "1":
-                    CrearNuevoTicket(gestor);
+                    CrearNuevoTicket();
                     break;
                 case "2":
                     gestor.MostrarTodosLosTickets();
@@ -75,13 +75,17 @@ class Program
 
         Ticket ticket = new Ticket();
 
+        //asignar asunto
         Console.WriteLine("Indique el Asunto: ");
         ticket.Asunto = Console.ReadLine();
-   
+        
+        //asignar descripcion
         Console.WriteLine("Indique la descripción: ");
         ticket.Descripcion = Console.ReadLine();
 
-
+        //mostrar canales
+        ticket.CanalContacto = ValidarCanal(canalesContacto);
+        
 
         Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
 
@@ -128,20 +132,34 @@ class Program
         }
     }
 
-    public void MostrarCanales()
+    static string ValidarCanal(List<String> listaCanales)
     {
-        Console.WriteLine("\nSeleccione el canal de contacto: ");
-        for (int i = 0; i < canalesContacto.Count; i++)
+        Boolean entradaValida = false;
+        int opcion = 0;
+
+        do
         {
-            Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
+            //Mostrar canales
+            for (int i = 0; i < canalesContacto.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
+            }
+
+            Console.WriteLine("\nSeleccione el canal de contacto: ");
+
+            //lee y valida rango de entrada usuario
+            if (int.TryParse(Console.ReadLine(), out opcion) && (opcion >= 1 && opcion <= canalesContacto.Count))
+            {
+                entradaValida = true;
+            }
+            else
+            {
+                Console.WriteLine("Opción no válida");
+            }
         }
-    }
+        while (!entradaValida);
 
-    public string ObtenerCanal(int indice)
-    {
-        if (indice >= 1 && indice <= canalesContacto.Count)
-            return canalesContacto[indice - 1];
+        return (canalesContacto[opcion - 1]);
 
-        return "Desconocido";
     }
 }
