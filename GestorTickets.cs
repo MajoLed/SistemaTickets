@@ -9,59 +9,29 @@ public class GestorTickets
     private List<Ticket> tickets = new List<Ticket>();
     private int siguienteId = 1;
 
-    private List<string> canalesContacto = new List<string>
-    {
-        "Correo",
-        "Presencial",
-        "WhatsApp"
-    };
-
     private readonly string archivoTickets = "tickets.json";
 
     //Constructor
     public GestorTickets()
     {
         CargarTickets();
-
     }
 
     // ------------ MÉTODOS --------------
 
     // Crear un nuevo ticket
-    public void CrearTicket(string asunto, string descripcion, string canal)
+    public void CrearTicket(Ticket ticket)
     {
-        var ticket = new Ticket
-        {
-            ID = siguienteId++,
-            Asunto = asunto,
-            Descripcion = descripcion,
-            Estado = "Abierto",
-            FechaCreacion = DateTime.Now,
-            TecnicoAsignado = "Sin asignar"
-        };
+        ticket.ID = siguienteId++;
+        ticket.FechaCreacion = DateTime.Now;
+        ticket.TecnicoAsignado = "Sin asignar";
 
         tickets.Add(ticket);
+
         Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
 
         //Se llama al método de Guardar tickets
         GuardarTickets();
-    }
-
-    public void MostrarCanales()
-    {
-        Console.WriteLine("\nSeleccione el canal de conectacto: ");
-        for (int i = 0; i < canalesContacto.Count; i++)
-        {
-            Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
-        }
-
-    }
-    public string ObtenerCanal(int indice)
-    {
-        if (indice >= 1 && indice <= canalesContacto.Count)
-            return canalesContacto[indice - 1];
-
-        return "Desconocido";
     }
 
     // Ver todos los tickets
@@ -92,7 +62,7 @@ public class GestorTickets
             return;
         }
 
-        Console.WriteLine($"\n=== MIS TICKETS ({nombreTecnico}) ===");
+        Console.WriteLine($"\n=== TICKETS DE {nombreTecnico} ===");
         foreach (var ticket in misTickets)
         {
             MostrarTicket(ticket);
@@ -191,6 +161,8 @@ public class GestorTickets
 
             string json = JsonSerializer.Serialize(tickets, opciones);
             File.WriteAllText(archivoTickets, json);
+
+
         }
         catch (Exception ex)
         {

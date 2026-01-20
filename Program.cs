@@ -2,13 +2,21 @@
 
 class Program
 {
+    static GestorTickets gestor = new GestorTickets();
     static void Main(string[] args)
     {
-        GestorTickets gestor = new GestorTickets();
+
         string nombreTecnico = "";
 
-        // Pedir nombre del técnico al inicio
-        Console.WriteLine("=== SISTEMA DE TICKETS ===");
+        List<string> canalesContacto = new List<string> {
+        "Correo",
+        "Presencial",
+        "WhatsApp",
+        "Teams"
+        };
+
+    // Pedir nombre del técnico al inicio
+    Console.WriteLine("=== SISTEMA DE TICKETS ===");
         Console.Write("Ingresa por favor el nombre del técnico: ");
         nombreTecnico = Console.ReadLine();
 
@@ -61,32 +69,36 @@ class Program
         }
     }
 
-    //------------- MÉTODOS --------------------
-    static void CrearNuevoTicket(GestorTickets gestor)
+    static void CrearNuevoTicket() // que la función no llame a gestor
     {
         Console.WriteLine("\n=== CREAR NUEVO TICKET ===");
 
-        Console.Write("Nombre del cliente: ");
-        string cliente = Console.ReadLine();
+        Ticket ticket = new Ticket();
 
-        Console.Write("Descripción del problema: ");
-        string descripcion = Console.ReadLine();
+        Console.WriteLine("Indique el Asunto: ");
+        ticket.Asunto = Console.ReadLine();
+   
 
-        gestor.MostrarCanales();
-        Console.Write("Escribe el número de la opción: ");
-
-        //Mini lógica 
-        if (int.TryParse(Console.ReadLine(), out int opcionCanal))
-        {
-            String canal = gestor.ObtenerCanal(opcionCanal);
-            gestor.CrearTicket(cliente, descripcion, canal);
-        }
-        else
-        {
-            Console.WriteLine("\n✗ Opción inválida");
-        }
+        Console.WriteLine("Indique la descripción: ");
+        ticket.Descripcion = Console.ReadLine();
+        
+        gestor.CrearTicket(ticket);
 
     }
+    private void MostrarTicket(Ticket ticket)
+    {
+        Console.WriteLine($"\n--- Ticket #{ticket.ID} ---");
+        Console.WriteLine($"Cliente: {ticket.Asunto}");
+        Console.WriteLine($"Problema: {ticket.Descripcion}");
+        Console.WriteLine($"Canal: {ticket.CanalContacto}");
+        Console.WriteLine($"Estado: {ticket.Estado}");
+        Console.WriteLine($"Técnico: {ticket.TecnicoAsignado}");
+        Console.WriteLine($"Creado: {ticket.FechaCreacion:dd/MM/yyyy HH:mm}");
+
+        if (ticket.FechaCierre != null)
+            Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
+    }
+
     static void AsignarTicket(GestorTickets gestor, string nombreTecnico)
     {
         Console.Write("\nIngresa el número de ticket a asignarte: ");
@@ -109,7 +121,24 @@ class Program
         }
         else
         {
-            Console.WriteLine("\n✗ Número inválido");
+            Console.WriteLine("\nNúmero inválido");
         }
+    }
+
+    public void MostrarCanales()
+    {
+        Console.WriteLine("\nSeleccione el canal de contacto: ");
+        for (int i = 0; i < canalesContacto.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
+        }
+    }
+
+    public string ObtenerCanal(int indice)
+    {
+        if (indice >= 1 && indice <= canalesContacto.Count)
+            return canalesContacto[indice - 1];
+
+        return "Desconocido";
     }
 }
