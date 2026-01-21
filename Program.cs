@@ -105,22 +105,21 @@ class ProgramTickets
             Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
     }
 
-    public List<Ticket> MostrarTodosLosTickets() //retornar lista de tickets
+    public List<Ticket> MostrarTodosLosTickets(List<Ticket> tickets) //retornar lista de tickets
     {
         if (tickets.Count == 0)
         {
-            Console.WriteLine("\nNo hay tickets registrados.");
+           return new List<Ticket>();
         }
-
-        Console.WriteLine("\n=== TODOS LOS TICKETS ===");
-
-        foreach (var ticket in tickets)
+        else
         {
-            MostrarTicket(ticket);
+            foreach (var ticket in tickets)
+            {
+                MostrarTicket(ticket);
+            }
+            return tickets;
         }
 
-        //Retornar lista de tickets
-        return tickets;
     }
 
     static void AsignarTicket(GestorTickets gestor, string nombreTecnico)
@@ -179,4 +178,6 @@ class ProgramTickets
         return (canalesContacto[opcion - 1]);
 
     }
+
+
 }
