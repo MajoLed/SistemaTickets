@@ -44,8 +44,30 @@ public class GestorTickets
             return misTickets;
         }
 
+        return misTickets;
     }
 
+    public List<Ticket> RetornarTickets(L) //retornar lista de tickets
+    {
+        if (tickets.Count == 0)
+        {
+            return new List<Ticket>; // retorna la lista vacía
+        }
+
+        //en caso contrario retorna la lista con los tickets
+        return tickets;
+    }
+
+    public List<Ticket> MostrarTodosLosTickets(L) //retornar lista de tickets
+    {
+        if (tickets.Count == 0)
+        {
+            return new List<Ticket>; // retorna la lista vacía
+        }
+
+        //en caso contrario retorna la lista con los tickets
+        return tickets;
+    }
 
     // Asignar un ticket a un técnico
     public void AsignarTicket(int ticketId, string nombreTecnico)

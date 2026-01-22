@@ -44,7 +44,7 @@ class ProgramTickets
                     MostrarTodosLosTickets();
                     break;
                 case "3":
-                    MostrarMisTickets(nombreTecnico);
+                    gestor.MostrarMisTickets(nombreTecnico);
                     break;
                 case "4":
                     AsignarTicket(gestor, nombreTecnico);
@@ -105,23 +105,6 @@ class ProgramTickets
             Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
     }
 
-    public List<Ticket> MostrarTodosLosTickets(List<Ticket> tickets) //retornar lista de tickets
-    {
-        if (tickets.Count == 0)
-        {
-           return new List<Ticket>();
-        }
-        else
-        {
-            foreach (var ticket in tickets)
-            {
-                MostrarTicket(ticket);
-            }
-            return tickets;
-        }
-
-    }
-
     static void AsignarTicket(GestorTickets gestor, string nombreTecnico)
     {
         Console.Write("\nIngresa el número de ticket a asignarte: ");
@@ -178,6 +161,5 @@ class ProgramTickets
         return (canalesContacto[opcion - 1]);
 
     }
-
 
 }
