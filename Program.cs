@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Net.Sockets;
 
-class Program
+class ProgramTickets
 {
+    static GestorTickets gestor = new GestorTickets();
+
+    static private List<string> canalesContacto = new List<string> {
+        "Correo",
+        "Presencial",
+        "WhatsApp",
+        "Teams"
+        };
     static void Main(string[] args)
     {
-        GestorTickets gestor = new GestorTickets();
         string nombreTecnico = "";
 
         // Pedir nombre del técnico al inicio
@@ -30,10 +38,10 @@ class Program
             switch (opcion)
             {
                 case "1":
-                    CrearNuevoTicket(gestor);
+                    CrearNuevoTicket();
                     break;
                 case "2":
-                    gestor.MostrarTodosLosTickets();
+                    MostrarTodosLosTickets();
                     break;
                 case "3":
                     gestor.MostrarMisTickets(nombreTecnico);
@@ -61,32 +69,42 @@ class Program
         }
     }
 
-    //------------- MÉTODOS --------------------
-    static void CrearNuevoTicket(GestorTickets gestor)
+    static void CrearNuevoTicket() // que la función no llame a gestor
     {
         Console.WriteLine("\n=== CREAR NUEVO TICKET ===");
 
-        Console.Write("Nombre del cliente: ");
-        string cliente = Console.ReadLine();
+        Ticket ticket = new Ticket();
 
-        Console.Write("Descripción del problema: ");
-        string descripcion = Console.ReadLine();
+        //asignar asunto
+        Console.Write("Indique el Asunto: ");
+        ticket.Asunto = Console.ReadLine();
+        
+        //asignar descripcion
+        Console.Write("Indique la descripción: ");
+        ticket.Descripcion = Console.ReadLine();
 
-        gestor.MostrarCanales();
-        Console.Write("Escribe el número de la opción: ");
+        //mostrar canales
+        ticket.CanalContacto = ValidarCanal(canalesContacto);
+        
+        Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
 
-        //Mini lógica 
-        if (int.TryParse(Console.ReadLine(), out int opcionCanal))
-        {
-            String canal = gestor.ObtenerCanal(opcionCanal);
-            gestor.CrearTicket(cliente, descripcion, canal);
-        }
-        else
-        {
-            Console.WriteLine("\n✗ Opción inválida");
-        }
+        gestor.CrearTicket(ticket);
 
     }
+    private void MostrarTicket(Ticket ticket)
+    {
+        Console.WriteLine($"\n--- Ticket #{ticket.ID} ---");
+        Console.WriteLine($"Asunto: {ticket.Asunto}");
+        Console.WriteLine($"Problema: {ticket.Descripcion}");
+        Console.WriteLine($"Canal: {ticket.CanalContacto}");
+        Console.WriteLine($"Estado: {ticket.Estado}");
+        Console.WriteLine($"Técnico: {ticket.TecnicoAsignado}");
+        Console.WriteLine($"Creado: {ticket.FechaCreacion:dd/MM/yyyy HH:mm}");
+
+        if (ticket.FechaCierre != null)
+            Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
+    }
+
     static void AsignarTicket(GestorTickets gestor, string nombreTecnico)
     {
         Console.Write("\nIngresa el número de ticket a asignarte: ");
@@ -109,7 +127,39 @@ class Program
         }
         else
         {
-            Console.WriteLine("\n✗ Número inválido");
+            Console.WriteLine("\nNúmero inválido");
         }
     }
+
+    static string ValidarCanal(List<String> listaCanales)
+    {
+        Boolean entradaValida = false;
+        int opcion = 0;
+
+        do
+        {
+            //Mostrar canales
+            for (int i = 0; i < canalesContacto.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
+            }
+
+            Console.WriteLine("\nSeleccione el canal de contacto: ");
+
+            //lee y valida rango de entrada usuario
+            if (int.TryParse(Console.ReadLine(), out opcion) && (opcion >= 1 && opcion <= canalesContacto.Count))
+            {
+                entradaValida = true;
+            }
+            else
+            {
+                Console.WriteLine("Opción no válida");
+            }
+        }
+        while (!entradaValida);
+
+        return (canalesContacto[opcion - 1]);
+
+    }
+
 }

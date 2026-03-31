@@ -9,94 +9,64 @@ public class GestorTickets
     private List<Ticket> tickets = new List<Ticket>();
     private int siguienteId = 1;
 
-    private List<string> canalesContacto = new List<string>
-    {
-        "Correo",
-        "Presencial",
-        "WhatsApp"
-    };
-
     private readonly string archivoTickets = "tickets.json";
 
     //Constructor
     public GestorTickets()
     {
         CargarTickets();
-
     }
 
     // ------------ MÉTODOS --------------
 
     // Crear un nuevo ticket
-    public void CrearTicket(string asunto, string descripcion, string canal)
+    public void CrearTicket(Ticket ticket)
     {
-        var ticket = new Ticket
-        {
-            ID = siguienteId++,
-            Asunto = asunto,
-            Descripcion = descripcion,
-            Estado = "Abierto",
-            FechaCreacion = DateTime.Now,
-            TecnicoAsignado = "Sin asignar"
-        };
+        ticket.ID = siguienteId++;
+        ticket.FechaCreacion = DateTime.Now;
+        ticket.TecnicoAsignado = "Sin asignar";
+        ticket.Estado = "Abierto";
 
         tickets.Add(ticket);
-        Console.WriteLine($"\n✓ Ticket #{ticket.ID} creado exitosamente");
 
         //Se llama al método de Guardar tickets
         GuardarTickets();
     }
 
-    public void MostrarCanales()
-    {
-        Console.WriteLine("\nSeleccione el canal de conectacto: ");
-        for (int i = 0; i < canalesContacto.Count; i++)
-        {
-            Console.WriteLine($"{i + 1}. {canalesContacto[i]}");
-        }
-
-    }
-    public string ObtenerCanal(int indice)
-    {
-        if (indice >= 1 && indice <= canalesContacto.Count)
-            return canalesContacto[indice - 1];
-
-        return "Desconocido";
-    }
-
-    // Ver todos los tickets
-    public void MostrarTodosLosTickets()
-    {
-        if (tickets.Count == 0)
-        {
-            Console.WriteLine("\nNo hay tickets registrados.");
-            return;
-        }
-
-        Console.WriteLine("\n=== TODOS LOS TICKETS ===");
-
-        foreach (var ticket in tickets)
-        {
-            MostrarTicket(ticket);
-        }
-    }
-
     // Ver tickets de un técnico específico
-    public void MostrarMisTickets(string nombreTecnico)
+    public List<Ticket> MostrarMisTickets(string nombreTecnico)
     {
         var misTickets = tickets.Where(t => t.TecnicoAsignado == nombreTecnico).ToList();
 
         if (misTickets.Count == 0)
         {
             Console.WriteLine($"\nNo tienes tickets asignados, {nombreTecnico}.");
-            return;
+            return misTickets;
         }
 
-        Console.WriteLine($"\n=== MIS TICKETS ({nombreTecnico}) ===");
-        foreach (var ticket in misTickets)
+        return misTickets;
+    }
+
+    public List<Ticket> RetornarTickets(L) //retornar lista de tickets
+    {
+        if (tickets.Count == 0)
         {
-            MostrarTicket(ticket);
+            return new List<Ticket>; // retorna la lista vacía
         }
+
+        //en caso contrario retorna la lista con los tickets
+        return tickets;
+    }
+
+    public List<Ticket> MostrarTodosLosTickets(L) //retornar lista de tickets
+    {
+        if (tickets.Count == 0)
+        {
+            return new List<Ticket>; // retorna la lista vacía
+        }
+
+        //en caso contrario retorna la lista con los tickets
+        return tickets;
     }
 
     // Asignar un ticket a un técnico
@@ -111,7 +81,7 @@ public class GestorTickets
         }
 
         ticket.TecnicoAsignado = nombreTecnico;
-        ticket.Estado = "EnProceso";
+        ticket.Estado = "En Progreso";
         Console.WriteLine($"\n✓ Ticket #{ticketId} asignado a {nombreTecnico}");
 
         GuardarTickets();
@@ -136,20 +106,19 @@ public class GestorTickets
     }
 
     // Método auxiliar para mostrar un ticket
-    private void MostrarTicket(Ticket ticket)
-    {
-        Console.WriteLine($"\n--- Ticket #{ticket.ID} ---");
-        Console.WriteLine($"Cliente: {ticket.Asunto}");
-        Console.WriteLine($"Problema: {ticket.Descripcion}");
-        Console.WriteLine($"Canal: {ticket.CanalContacto}");
-        Console.WriteLine($"Estado: {ticket.Estado}");
-        Console.WriteLine($"Técnico: {ticket.TecnicoAsignado}");
-        Console.WriteLine($"Creado: {ticket.FechaCreacion:dd/MM/yyyy HH:mm}");
+    //private void mostrarticket(ticket ticket)
+    //{
+    //    console.writeline($"\n--- ticket #{ticket.id} ---");
+    //    console.writeline($"cliente: {ticket.asunto}");
+    //    console.writeline($"problema: {ticket.descripcion}");
+    //    console.writeline($"canal: {ticket.canalcontacto}");
+    //    console.writeline($"estado: {ticket.estado}");
+    //    console.writeline($"técnico: {ticket.tecnicoasignado}");
+    //    console.writeline($"creado: {ticket.fechacreacion:dd/mm/yyyy hh:mm}");
 
-        if (ticket.FechaCierre != null)
-            Console.WriteLine($"Cerrado: {ticket.FechaCierre}");
-    }
-
+    //    if (ticket.fechacierre != null)
+    //        console.writeline($"cerrado: {ticket.fechacierre}");
+    //}
 
     // ------------ MÉTODOS JSON --------------
     private void CargarTickets()
@@ -191,6 +160,8 @@ public class GestorTickets
 
             string json = JsonSerializer.Serialize(tickets, opciones);
             File.WriteAllText(archivoTickets, json);
+
+
         }
         catch (Exception ex)
         {
